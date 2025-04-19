@@ -1,1 +1,1 @@
-User-agent: \* Disallow: /private/ Allow: / Sitemap: https://your-username.github.io/your-repo/sitemap.xml
+User-agent: * Disallow: /private/ Allow: / Sitemap: https://mahdizanlu.github.io/seo-practice-blog/sitemap.xml
