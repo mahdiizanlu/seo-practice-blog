@@ -1,0 +1,140 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="یک وبلاگ ساده برای تمرین سئو، شامل مقالات و نکات آموزشی برای بهینه‌سازی موتورهای جستجو.">
+  <meta name="keywords" content="سئو, بهینه‌سازی سایت, وبلاگ آموزشی, تمرین سئو">
+  <meta name="author" content="داریوش">
+  <title>وبلاگ تمرین سئو</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    nav {
+      background: #444;
+      padding: 1rem;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    article {
+      background: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    article img {
+      max-width: 100%;
+      height: auto;
+    }
+    footer {
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    @media (max-width: 600px) {
+      nav a {
+        display: block;
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>وبلاگ تمرین سئو</h1>
+    <p>جایی برای یادگیری و تمرین بهینه‌سازی موتورهای جستجو</p>
+  </header>
+  <nav>
+    <a href="index.html">خانه</a>
+    <a href="#blog">مقالات</a>
+    <a href="about.html">درباره ما</a>
+  </nav>
+  <div class="container">
+    <article>
+      <h2>چطور سئو سایت خود را بهبود دهیم؟</h2>
+      <img src="https://via.placeholder.com/800x400" alt="تصویر مرتبط با سئو">
+      <p>در این مقاله، به اصول اولیه سئو مثل تحقیق کلمات کلیدی، بهینه‌سازی محتوا، و لینک‌سازی داخلی می‌پردازیم...</p>
+      <a href="#">ادامه مطلب</a>
+    </article>
+    <article>
+      <h2>چرا سرعت سایت برای سئو مهم است؟</h2>
+      <img src="https://via.placeholder.com/800x400" alt="تصویر سرعت سایت">
+      <p>سرعت بارگذاری سایت یکی از عوامل مهم در رتبه‌بندی گوگل است. در این پست، راهکارهایی برای بهبود سرعت سایت بررسی می‌کنیم...</p>
+      <a href="#">ادامه مطلب</a>
+    </article>
+  </div>
+  <footer>
+    <p>تمامی حقوق برای وبلاگ تمرین سئو محفوظ است © 2025</p>
+  </footer>
+</body>
+</html>
